@@ -3092,6 +3092,20 @@ private:
                 return;
         }
 
+        ///=========== JW EDIT in attempt to fix mouse draggin modifiers on windows
+        /// suggestion from https://forum.juce.com/t/win-pt-modifier-fixes-in-juce-4-1/18997/15
+        if (isMouseOver && isDragging)
+         {
+             updateKeyModifiers();
+
+            #if JUCE_MODULE_AVAILABLE_juce_audio_plugin_client
+             if (modProvider != nullptr)
+                 ModifierKeys::currentModifiers = ModifierKeys::currentModifiers.withFlags(modProvider->getWin32Modifiers());
+            #endif
+         }
+        ///=========== end JW EDIT
+
+        
         static uint32 lastMouseTime = 0;
         static auto minTimeBetweenMouses = getMinTimeBetweenMouseMoves();
         auto now = Time::getMillisecondCounter();
